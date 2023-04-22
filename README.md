@@ -1,4 +1,5 @@
 # Spring Data JPA y PostgreSQL
+![schema-applicattion](schema-applicattion.PNG)
 Proyecto de ejemplo usando el módulo de Spring Data JPA con conexión a una BD PostgreSQL.  
 Se realizan las operaciones básicas CRUD (Create, Read, Update, Delete) desde la clase `StudentService` (la lógica de la aplicación) que usa la interfaz `StudentRepository`.
 
