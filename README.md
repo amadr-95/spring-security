@@ -23,7 +23,7 @@ En este caso usamos la anotación ``@DeleteMapping`` sobre el mismo path pero a�
 como variable (`@PathVariable`) por la que buscar para borrarlo: _http://localhost:8080/api/v1/student/id_. Si el _ID_ no existe se lanza una excepcion
 y en caso contrario se elimina de la BD.
 
-## Update (put)
+## Update
 Por ultimo para actualizar un registro usamos la anotación `@PutMapping` sobre el mismo path añadiendo tambien el _ID_ del estudiante
 como variable (`@PathVariable`) para buscarlo y además dos valores más _name_ e _email_ con la anotación `@RequestParam` (opcionales) que serán los campos a actualizar:
 _http://localhost:8080/api/v1/student/ID?name=name&email=email_  
