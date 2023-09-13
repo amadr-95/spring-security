@@ -10,11 +10,12 @@ import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
+
 import java.time.LocalDate;
 import java.time.Period;
 
-@Entity (name = "Student")
-@Table (
+@Entity
+@Table(
         name = "Student",
         uniqueConstraints = {
                 @UniqueConstraint(name = "student_email_unique", columnNames = "email")
@@ -56,7 +57,7 @@ public class Student {
     )
     private LocalDate birth;
 
-    @Transient //no crea una columna de esta propiedad (podemos calcularla con la fecha de nac)
+    @Transient // this property is not a field in the table
     private int age;
 
     public Student() {
