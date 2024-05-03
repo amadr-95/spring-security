@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>spring-data-jpa-example</artifactId>
+	<artifactId>student-api-example</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-data-jpa-example</name>
 	<description>Simple project using Spring Boot Data JPA and PostgreSQL</description>
