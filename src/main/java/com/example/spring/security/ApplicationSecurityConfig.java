@@ -24,6 +24,7 @@ public class ApplicationSecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "index.html", "/css/*", "/js/*")
                         .permitAll()
+                        .requestMatchers("/api/**").hasRole(ADMIN.toString())
                         .anyRequest()
                         .authenticated()
                 )
