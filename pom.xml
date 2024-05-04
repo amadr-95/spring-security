@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.6</version>
+		<version>3.2.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>student-api-example</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-data-jpa-example</name>
-	<description>Simple project using Spring Boot Data JPA and PostgreSQL</description>
+	<name>student-api-example</name>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -31,6 +31,13 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.javafaker</groupId>
+			<artifactId>javafaker</artifactId>
+			<version>0.15</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

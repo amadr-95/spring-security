@@ -6,13 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 import java.time.LocalDate;
-import java.time.Period;
 
 @Entity
 @Table(
@@ -31,34 +29,19 @@ public class Student {
     )
     @GeneratedValue(
             strategy = SEQUENCE,
-            generator = "student_sequence" // = sequenceName
+            generator = "student_sequence"
     )
-    @Column(
-            name = "id",
-            updatable = false
-    )
-    private Long id;
 
-    @Column(
-            name = "name",
-            nullable = false
-    )
+    private Integer id;
+
+    @Column(nullable = false)
     private String name;
 
-    @Column(
-            name = "email",
-            nullable = false
-    )
+    @Column(nullable = false)
     private String email;
 
-    @Column(
-            name = "birth",
-            nullable = false
-    )
+    @Column(nullable = false)
     private LocalDate birth;
-
-    @Transient // this property is not a field in the table
-    private int age;
 
     public Student() {
     }
@@ -69,7 +52,7 @@ public class Student {
         this.birth = birth;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -97,10 +80,6 @@ public class Student {
         this.birth = birth;
     }
 
-    public int getAge() {
-        return Period.between(this.birth, LocalDate.now()).getYears();
-    }
-
     @Override
     public String toString() {
         return "Student{" +
@@ -108,7 +87,6 @@ public class Student {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", date=" + birth +
-                ", age=" + age +
                 '}';
     }
 }

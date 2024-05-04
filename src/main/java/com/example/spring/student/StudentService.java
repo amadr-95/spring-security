@@ -1,66 +1,101 @@
 package com.example.spring.student;
 
+import com.example.spring.exceptions.EmailDuplicateException;
+import com.example.spring.exceptions.StudentException;
+import com.example.spring.exceptions.StudentNotFoundException;
+import com.example.spring.exceptions.ValidationException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StudentService {
 
-    private final StudentRepository studentRepository;
+    private final StudentDAO studentDAO;
 
-    public StudentService(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    public StudentService(StudentDAO studentDAO) {
+        this.studentDAO = studentDAO;
     }
 
     //GET
-    public List<Student> getStudents() {
-        return studentRepository.findAll();
+    public List<Student> findAllStudents() {
+        return studentDAO.findAllStudents();
     }
 
-    //GET
-    public Student findStudentById(Long id) {
-        return studentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("id " + id + " does not exist"));
+    public Student findStudentById(Integer id) throws StudentNotFoundException {
+        return studentDAO.findStudentById(id)
+                .orElseThrow(() -> new StudentNotFoundException(
+                        "Student with id " + id + " does not exist"));
     }
 
     //POST
-    public void addNewStudent(Student student) {
-        Optional<Student> optionalStudent = studentRepository.findStudentByEmail(student.getEmail());
-        if (optionalStudent.isPresent())
-            throw new IllegalArgumentException("email already exists");
-        studentRepository.save(student);
+    public void addNewStudent(StudentRequest studentRequest)
+            throws StudentException {
+        //check fields
+        checkStudentFields(studentRequest);
+        //check if email already exists
+        existsStudentByEmail(studentRequest.email());
+        //save student
+        Student newStudent = new Student
+                (studentRequest.name(),
+                        studentRequest.email(),
+                        studentRequest.birth()
+                );
+
+        studentDAO.saveStudent(newStudent);
     }
 
     //DELETE
-    public void deleteStudent(Long studentId) {
-        Optional<Student> student = studentRepository.findById(studentId);
-        if (student.isEmpty())
-            throw new IllegalArgumentException("id " + studentId + " does not exist");
-        studentRepository.deleteById(studentId);
-
+    public void deleteStudentById(Integer studentId) throws StudentNotFoundException {
+        findStudentById(studentId);
+        studentDAO.deleteStudentById(studentId);
     }
 
     //PUT
     @Transactional
-    public void updateStudent(Long studentId, String name, String email) {
-        /*Student student = studentRepository.findStudentByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("id "+studentId+" does not exist"));*/
-        if (studentRepository.findById(studentId).isEmpty())
-            throw new IllegalArgumentException("id " + studentId + " does not exist");
+    public void updateStudentById(Integer studentId, StudentRequest studentRequest)
+            throws StudentException {
+        Student student = findStudentById(studentId);
 
-        Student student = studentRepository.findById(studentId).get();
-        if (name != null && !name.isEmpty() && !name.equalsIgnoreCase(student.getName()))
-            student.setName(name);
+        String nameRequest = studentRequest.name();
+        String emailRequest = studentRequest.email();
+        LocalDate birth = studentRequest.birth();
 
-        if (email != null && email.contains("@") && !email.equalsIgnoreCase(student.getEmail())) {
-            //check if email is taken by another person
-            if (studentRepository.findStudentByEmail(email).isPresent())
-                throw new IllegalArgumentException("email " + email + " is taken");
-            student.setEmail(email);
+        if (emailRequest != null && !emailRequest.isBlank() && !emailRequest.equalsIgnoreCase(student.getEmail())) {
+            existsStudentByEmail(emailRequest);
+            student.setEmail(emailRequest);
         }
+
+        if (nameRequest != null && !nameRequest.isBlank())
+            student.setName(nameRequest);
+
+        if (birth != null && !birth.toString().isBlank()) {
+            student.setBirth(birth);
+        }
+
+        studentDAO.updateStudent(student);
+    }
+
+    private void checkStudentFields(StudentRequest studentRequest) throws StudentException {
+        if (studentRequest == null)
+            throw new StudentException("student can not be null");
+
+        String nameRequest = studentRequest.name();
+        String emailRequest = studentRequest.email();
+        LocalDate birthRequest = studentRequest.birth();
+
+        if (nameRequest == null || nameRequest.isBlank() ||
+                emailRequest == null || emailRequest.isBlank() ||
+                birthRequest == null || birthRequest.toString().isBlank()
+        )
+            throw new ValidationException("missing field/s");
+    }
+
+    private boolean existsStudentByEmail(String email) throws EmailDuplicateException {
+        if (studentDAO.existsStudentByEmail(email))
+            throw new EmailDuplicateException("email already taken");
+        return false;
     }
 }
