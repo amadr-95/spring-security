@@ -13,14 +13,14 @@ public class ApplicationSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
+        return httpSecurity
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "index.html", "/css/*", "/js/*")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
                 )
-                .httpBasic(Customizer.withDefaults());
-        return httpSecurity.build();
+                .httpBasic(Customizer.withDefaults())
+                .build();
     }
 }
