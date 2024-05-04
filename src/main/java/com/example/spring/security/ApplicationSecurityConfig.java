@@ -7,10 +7,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import static com.example.spring.security.ApplicationUserRole.ADMIN;
+import static com.example.spring.security.ApplicationUserRole.STUDENT;
 
 @Configuration
 @EnableWebSecurity
@@ -31,11 +33,17 @@ public class ApplicationSecurityConfig {
 
     @Bean
     public InMemoryUserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
-        UserDetails user = User.builder()
+        UserDetails studentUser = User.builder()
+                .username("student")
+                .password(passwordEncoder.encode("student"))
+                .roles(STUDENT.toString()) //ROL_STUDENT
+                .build();
+
+        UserDetails adminUser = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("admin"))
-                .roles("ADMIN") //ROL_ADMIN
+                .roles(ADMIN.toString()) //ROL_ADMIN
                 .build();
-        return new InMemoryUserDetailsManager(user);
+        return new InMemoryUserDetailsManager(studentUser, adminUser);
     }
 }
