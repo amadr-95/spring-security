@@ -29,11 +29,13 @@ public class ApplicationSecurityConfig {
                         .requestMatchers("/", "index.html", "/css/*", "/js/*")
                         .permitAll()
                         //.requestMatchers("/api/**").hasRole(ADMIN.toString())
-                        /*.requestMatchers(HttpMethod.POST, "/management/api/**").hasAuthority(STUDENT_WRITE.getPermission())
+                        /*
+                        .requestMatchers(HttpMethod.POST, "/management/api/**").hasAuthority(STUDENT_WRITE.name())
                         .requestMatchers(HttpMethod.PUT, "/management/api/**").hasAuthority(STUDENT_WRITE.getPermission())
                         .requestMatchers(HttpMethod.DELETE, "/management/api/**").hasAuthority(STUDENT_WRITE.getPermission())
                         .requestMatchers(HttpMethod.GET, "/management/api/**").hasAnyAuthority(
-                                STUDENT_WRITE.getPermission(), STUDENT_READ.getPermission())*/
+                                STUDENT_WRITE.getPermission(), STUDENT_READ.getPermission())
+                                */
                         .anyRequest()
                         .authenticated()
                 )
