@@ -2,9 +2,7 @@ package com.example.spring.security;
 
 public enum ApplicationUserPermission {
     STUDENT_READ("student:read"),
-    STUDENT_WRITE("student:write"),
-    STUDENT_DELETE("student:delete"),
-    STUDENT_UPDATE("student:update");
+    STUDENT_WRITE("student:write");
 
     private final String permission;
 
