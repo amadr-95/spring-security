@@ -27,16 +27,21 @@ public class ApplicationSecurityConfig {
                         .permitAll()
                         //.requestMatchers("/api/**").hasRole(ADMIN.toString())
                         /* MOVE TO CONTROLLER METHODS
-                        .requestMatchers(HttpMethod.POST, "/management/api/**").hasAuthority(STUDENT_WRITE.name())
-                        .requestMatchers(HttpMethod.PUT, "/management/api/**").hasAuthority(STUDENT_WRITE.getPermission())
-                        .requestMatchers(HttpMethod.DELETE, "/management/api/**").hasAuthority(STUDENT_WRITE.getPermission())
-                        .requestMatchers(HttpMethod.GET, "/management/api/**").hasAnyAuthority(
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority(STUDENT_WRITE.getPermission())
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAuthority(STUDENT_WRITE.getPermission())
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(STUDENT_WRITE.getPermission())
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyAuthority(
                                 STUDENT_WRITE.getPermission(), STUDENT_READ.getPermission())
                                 */
                         .anyRequest()
                         .authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                        //.defaultSuccessUrl("/api/v1/students", true)
+                )
+                //.formLogin(Customizer.withDefaults())
                 .build();
     }
 
