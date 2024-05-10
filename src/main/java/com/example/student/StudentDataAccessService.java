@@ -1,4 +1,4 @@
-package com.example.spring.student;
+package com.example.student;
 
 import org.springframework.stereotype.Repository;
 

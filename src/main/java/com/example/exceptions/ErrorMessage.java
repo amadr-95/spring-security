@@ -1,4 +1,4 @@
-package com.example.spring.exceptions;
+package com.example.exceptions;
 
 import java.util.Date;
 

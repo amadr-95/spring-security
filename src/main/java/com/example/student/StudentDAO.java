@@ -1,4 +1,4 @@
-package com.example.spring.student;
+package com.example.student;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,13 +1,12 @@
-package com.example.spring.security;
+package com.example.security;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static com.example.spring.security.ApplicationUserPermission.STUDENT_READ;
-import static com.example.spring.security.ApplicationUserPermission.STUDENT_WRITE;
+import static com.example.security.ApplicationUserPermission.STUDENT_READ;
+import static com.example.security.ApplicationUserPermission.STUDENT_WRITE;
 
 public enum ApplicationUserRole {
     STUDENT(Set.of(STUDENT_READ)),

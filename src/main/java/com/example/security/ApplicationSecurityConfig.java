@@ -1,4 +1,4 @@
-package com.example.spring.security;
+package com.example.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import static com.example.spring.security.ApplicationUserRole.ADMIN;
-import static com.example.spring.security.ApplicationUserRole.STUDENT;
 
 @Configuration
 @EnableWebSecurity
@@ -49,14 +46,14 @@ public class ApplicationSecurityConfig {
                 .username("student")
                 .password(passwordEncoder.encode("student"))
                 //.roles(STUDENT.toString()) //ROL_STUDENT
-                .authorities(STUDENT.getGrantedAuthorities())
+                .authorities(ApplicationUserRole.STUDENT.getGrantedAuthorities())
                 .build();
 
         UserDetails adminUser = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("admin"))
                 //.roles(ADMIN.toString()) //ROL_ADMIN
-                .authorities(ADMIN.getGrantedAuthorities())
+                .authorities(ApplicationUserRole.ADMIN.getGrantedAuthorities())
                 .build();
         return new InMemoryUserDetailsManager(studentUser, adminUser);
     }

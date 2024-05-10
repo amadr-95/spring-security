@@ -1,4 +1,4 @@
-package com.example.spring.exceptions;
+package com.example.exceptions;
 
 public class StudentException extends Exception{
     public StudentException() {
