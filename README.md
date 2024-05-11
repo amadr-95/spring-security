@@ -2,6 +2,7 @@
 
 Spring Security allows to secure the access to API endpoints and
 grant priviliges only to trusted users or permissions.
+In this example we start from a API already built.
 
 ## ApplicationSecurityConfig class
 
@@ -77,7 +78,7 @@ There is no posibility to logout
 
 [basic-auth-image]
 
-#### Role base Authentication
+#### Role based Authentication
 
 Granting access to API endpoints filtering by **user role**.
 
@@ -98,6 +99,7 @@ Granting access to API endpoints filtering by **user role**.
 > likely want to disable CSRF protection. So in this case we can disable it.
 
 ```java
+
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
     return httpSecurity
@@ -117,6 +119,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws
 Creating the user using `InMemoryUserDetailsManager` with its role (ADMIN).
 
 ```java
+
 @Bean
 public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
     UserDetails admin = User.builder()
@@ -132,10 +135,13 @@ public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEnc
 > The password must be encoded
 
 #### Permission based Authentication
-Granting access to API endpoints filtering by **user's permissions** instead of the role itself. 
+
+Granting access to API endpoints filtering by **user's permissions** instead of the role itself.
 
 Now we have to change `.role(ROLE)` for `.authorities(authorities)`:
+
 ```java
+
 @Bean
 public InMemoryUserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
     UserDetails studentUser = User.builder()
@@ -154,8 +160,9 @@ public InMemoryUserDetailsManager userDetailsManager(PasswordEncoder passwordEnc
     return new InMemoryUserDetailsManager(studentUser, adminUser);
 }
 ```
+
 To be able to obtain permissions from an user, we have to convert permissions from plain text to
-some type that implements `GrantedAuthority` interface, such as `SimpleGrantedAuthority`:
+a type that implements `GrantedAuthority` interface, such as `SimpleGrantedAuthority`:
 
 ```java
 public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
@@ -173,16 +180,22 @@ public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
 }
 ```
 
-#### Permission base Authentication on a method level
+By doing this, we have attached the correct authorities to users.
+
+#### Permission based Authentication on a method level
+
 We can also set authentication by annotating methods with `@PreAuthorized()`.
-Within the annotation we can both filter by roles or permissions passing it these strings: 
+Within the annotation we can both filter by roles or permissions passing it these strings:
+
 - hasRole('ROLE_')
 - hasAnyRole('ROLE_')
 - hasAuthority('permission')
 - hasAnyAuthority('permission')
 
 To use that we also have to annotate `ApplicationSecurityConfig` with `@EnableMethodSecurity`
+
 ```java
+
 @GetMapping
 @PreAuthorize("hasRole('ADMIN')")
 public List<Student> findAllStudents() {
@@ -202,10 +215,60 @@ public void addNewStudent(@RequestBody StudentRequest student) throws StudentExc
 }
 ```
 
-### Form base Authentication
+### Form based Authentication
 
-Just by adding the spring-security dependency, a form to login the API endpoints is generated
-and provides a local development password that changes every time the app runs (username is always 'user').
-This is the default type of auth that comes with Spring security.
+Form based is the default type of auth that comes with Spring security.
+It auto-generates a form to login with user credentials. Once logged,
+a cookie `SESSIONID` (generated when the user login for first time) is sending
+to the server on every request.
+
+Enabling form auth instead of basic auth is just a matter of changing one line:
+
+```java
+
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    return httpSecurity
+            .authorizeHttpRequests(authz -> authz
+                    ...
+            )
+            .formLogin(Customizer.withDefaults())
+            .build();
+}
+```
 
 [form image]
+
+#### Options
+
+* Custom login page
+    ```java
+    .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+        .passwordParameter("password") //same name as form name in html
+        .usernameParameter("username")
+        .loginPage("/login")
+        .permitAll()
+        .defaultSuccessUrl("url", true)
+    )
+    ```
+
+* Custom remember me expiration time  
+By default SESSIONID cookie expires after 30' of inactivity.
+These can be changed as follows:
+    ```java
+    //.rememberMe(Customizer.withDefaults()) //valid 30'
+    .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
+        .rememberMeParameter("remember-me")  
+        .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
+        .key("securekey") //key to encrypt the username and expiration time instead of default one
+    ) 
+    ```
+* Custom logout
+    ```java
+    .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
+        .logoutUrl("/logout")
+        .clearAuthentication(true)
+        .deleteCookies("JSESSIONID", "remember-me")
+        .logoutSuccessUrl("/index.html")
+    )
+    ```
