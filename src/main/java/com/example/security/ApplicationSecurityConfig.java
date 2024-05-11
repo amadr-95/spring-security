@@ -41,14 +41,16 @@ public class ApplicationSecurityConfig {
                 //.formLogin(Customizer.withDefaults()) //SESSIONID expires after 30' of inactivity
                 .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
                                 .loginPage("/login")
+                                .passwordParameter("password") //same name as form name in html
+                                .usernameParameter("username") //same name as form name in html
                                 .permitAll()
                         //.defaultSuccessUrl("/api/v1/students", true)
                 )
                 //.rememberMe(Customizer.withDefaults()) //two weeks by default
-                .rememberMe(httpSecurityRememberMeConfigurer ->
-                        httpSecurityRememberMeConfigurer
-                                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
-                                .key("securekey") //key to encrypt the username and expiration time instead of default one
+                .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
+                        .rememberMeParameter("remember-me")
+                        .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
+                        .key("securekey") //key to encrypt the username and expiration time instead of default one
                 )
                 .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
                         .logoutUrl("/logout")
