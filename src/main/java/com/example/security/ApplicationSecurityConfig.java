@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.concurrent.TimeUnit;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity()
@@ -36,12 +38,24 @@ public class ApplicationSecurityConfig {
                         .anyRequest()
                         .authenticated()
                 )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll()
+                //.formLogin(Customizer.withDefaults()) //SESSIONID expires after 30' of inactivity
+                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+                                .loginPage("/login")
+                                .permitAll()
                         //.defaultSuccessUrl("/api/v1/students", true)
                 )
-                //.formLogin(Customizer.withDefaults())
+                //.rememberMe(Customizer.withDefaults()) //two weeks by default
+                .rememberMe(httpSecurityRememberMeConfigurer ->
+                        httpSecurityRememberMeConfigurer
+                                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
+                                .key("securekey") //key to encrypt the username and expiration time instead of default one
+                )
+                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
+                        .logoutUrl("/logout")
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID", "remember-me")
+                        .logoutSuccessUrl("/index.html")
+                )
                 .build();
     }
 
