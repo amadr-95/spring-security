@@ -1,17 +1,18 @@
 package com.example.security;
 
+import com.example.auth.ApplicationUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.concurrent.TimeUnit;
@@ -20,6 +21,12 @@ import java.util.concurrent.TimeUnit;
 @EnableWebSecurity
 @EnableMethodSecurity()
 public class ApplicationSecurityConfig {
+
+    private final ApplicationUserService applicationUserService;
+
+    public ApplicationSecurityConfig(ApplicationUserService applicationUserService) {
+        this.applicationUserService = applicationUserService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -62,8 +69,8 @@ public class ApplicationSecurityConfig {
                 .build();
     }
 
-    @Bean
-    public UserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
+    /*@Bean
+    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         UserDetails studentUser = User.builder()
                 .username("student")
                 .password(passwordEncoder.encode("student"))
@@ -78,5 +85,13 @@ public class ApplicationSecurityConfig {
                 .authorities(ApplicationUserRole.ADMIN.getGrantedAuthorities())
                 .build();
         return new InMemoryUserDetailsManager(studentUser, adminUser);
+    }*/
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setUserDetailsService(applicationUserService);
+        return provider;
     }
 }
