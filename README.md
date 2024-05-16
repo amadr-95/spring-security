@@ -76,7 +76,7 @@ every request, which are encrypted by Basic64.
 There is no posibility to logout
 (mostly used with external API's)
 
-[basic-auth-image]
+![basic-auth](https://github.com/amadr-95/spring-security/assets/122611230/21434277-f472-4c33-9294-e1aa559f0eef)
 
 #### Role based Authentication
 
@@ -87,13 +87,13 @@ Granting access to API endpoints filtering by **user role**.
 > The action of forging a copy or imitation of a document, signature,
 > banknote, or work of art.
 > Spring Security try to protect teh API by default.
-> [csrf-image]
 > On POST, PUT, DELETE methods the request is rejected
 > because no token was sent to the client when logged in. That is
 > what csrf does by default when it is enabled.
-> [csrf-image-diagram]  
-> [**When to use CSRF protection**](https://docs.spring.io/spring-security/site/docs/5.0.x/reference/html/csrf.html)
-> CSRF protection is recommended to use for any request that could be
+> 
+> ![crsf](https://github.com/amadr-95/spring-security/assets/122611230/c9aad1fc-a43b-4c70-82df-fbc652c26d46)
+> 
+> [CSRF protection is recommended](https://docs.spring.io/spring-security/site/docs/5.0.x/reference/html/csrf.html) to use for any request that could be
 > processed by a browser by normal users. If you are only creating a service that is used by non-browser clients, you
 > will
 > likely want to disable CSRF protection. So in this case we can disable it.
@@ -235,7 +235,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws
 }
 ```
 
-[form image]
+![form-auth](https://github.com/amadr-95/spring-security/assets/122611230/136cb7e8-8fbc-4e14-84aa-f662ad893ca0)
+
 
 #### Options
 
@@ -273,14 +274,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws
 
 ## JWT (JSON Web Token)
 
-[jwt-image]
+![jwt_diagram](https://github.com/amadr-95/spring-security/assets/122611230/00df9226-b745-432d-b726-26b9a2a6d6bd)
 
 ### Java JWT Library
 
 Managing authentication requests based on username and password using JSON Web Tokens (JWT).
-
-[jwt-image2]
-
 To use these library we have to add the dependecies to `pom.xml`:
 
 ```xml
@@ -309,3 +307,13 @@ By extending from it we can override some methods and give them specific impleme
 - `successfulAuthentication` method will be executed only if `attempAuthentication` does not fail.
 - Create the token
 - Send it to the client
+
+![jwt_steps](https://github.com/amadr-95/spring-security/assets/122611230/d1d0017c-53a1-4d83-9b71-990162c8839d)
+
+Once implemented, we can access to `http://localhost:8080/api/v1/auth/authenticate` and try to log in with any user:
+
+![token](https://github.com/amadr-95/spring-security/assets/122611230/bc3238b1-4646-4102-b49f-5c30af54c4bf)
+
+If credentials are correct, a token will be generated. This token must be used as authorization method in every request to the API as follows:
+
+![request_token](https://github.com/amadr-95/spring-security/assets/122611230/da4b2057-622c-4c11-b43a-55c79d49ea13)
