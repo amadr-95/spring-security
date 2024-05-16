@@ -6,10 +6,10 @@ In this example we start from a API already built.
 
 ## ApplicationSecurityConfig class
 
-Under the package `com.security.security` is the class where all configurations about security are done
+Under the package `com.spring.security` is the class where all configurations about security are done
 
 ```java
-package com.security.spring.security;
+package com.spring.spring.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
