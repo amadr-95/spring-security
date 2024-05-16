@@ -99,7 +99,6 @@ Granting access to API endpoints filtering by **user role**.
 > likely want to disable CSRF protection. So in this case we can disable it.
 
 ```java
-
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
     return httpSecurity
@@ -119,7 +118,6 @@ public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws
 Creating the user using `InMemoryUserDetailsManager` with its role (ADMIN).
 
 ```java
-
 @Bean
 public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
     UserDetails admin = User.builder()
@@ -273,11 +271,6 @@ public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws
     )
     ```
 
-## Database Authentication (not implemented)
-
-Store users in a real database instead of in memory.
-All the code is behind _auth_ package.
-
 ## JWT (JSON Web Token)
 
 [jwt-image]
@@ -293,20 +286,14 @@ To use these library we have to add the dependecies to `pom.xml`:
 ```xml
 <dependency>
     <groupId>io.jsonwebtoken</groupId>
-    <artifactId>jjwt-api</artifactId>
-    <version>0.12.5</version>
+    <artifactId>jjwt</artifactId>
+    <version>0.9.1</version>
 </dependency>
+
 <dependency>
-    <groupId>io.jsonwebtoken</groupId>
-    <artifactId>jjwt-impl</artifactId>
-    <version>0.12.5</version>
-    <scope>runtime</scope>
-</dependency>
-<dependency>
-    <groupId>io.jsonwebtoken</groupId>
-    <artifactId>jjwt-jackson</artifactId>
-    <version>0.12.5</version>
-    <scope>runtime</scope>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.1</version>
 </dependency>
 ```
 
