@@ -1,12 +1,12 @@
 package com.example.security;
 
-public enum ApplicationUserPermission {
+public enum UserPermission {
     STUDENT_READ("student:read"),
     STUDENT_WRITE("student:write");
 
     private final String permission;
 
-    ApplicationUserPermission(String permission) {
+    UserPermission(String permission) {
         this.permission = permission;
     }
 

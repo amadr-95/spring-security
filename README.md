@@ -253,8 +253,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws
     ```
 
 * Custom remember me expiration time  
-By default SESSIONID cookie expires after 30' of inactivity.
-These can be changed as follows:
+  By default SESSIONID cookie expires after 30' of inactivity.
+  These can be changed as follows:
     ```java
     //.rememberMe(Customizer.withDefaults()) //valid 30'
     .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
@@ -272,3 +272,53 @@ These can be changed as follows:
         .logoutSuccessUrl("/index.html")
     )
     ```
+
+## Database Authentication (not implemented)
+
+Store users in a real database instead of in memory.
+All the code is behind _auth_ package.
+
+## JWT (JSON Web Token)
+
+[jwt-image]
+
+### Java JWT Library
+
+Managing authentication requests based on username and password using JSON Web Tokens (JWT).
+
+[jwt-image2]
+
+To use these library we have to add the dependecies to `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.12.5</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.12.5</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>0.12.5</version>
+    <scope>runtime</scope>
+</dependency>
+```
+
+`UsernamePasswordAuthenticationFilter` is the dafault class Spring uses.
+By extending from it we can override some methods and give them specific implementation.
+
+### First step: validates credentials
+- Modelate authentication request with `UsernameAndPasswordAuthenticationRequest.class`
+- Override `attempAuthentication` method.
+- If username and password are correct, this method return the Authentication
+
+### Second step: generates token and send it to the client
+- `successfulAuthentication` method will be executed only if `attempAuthentication` does not fail.
+- Create the token
+- Send it to the client

@@ -1,13 +1,15 @@
 package com.example.auth;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.security.ApplicationUserRole.ADMIN;
-import static com.example.security.ApplicationUserRole.STUDENT;
+import static com.example.security.UserRole.ADMIN;
+import static com.example.security.UserRole.STUDENT;
 
 @Repository("fake")
 public class FakeApplicationUserDaoService implements ApplicationUserDao {
@@ -19,17 +21,17 @@ public class FakeApplicationUserDaoService implements ApplicationUserDao {
     }
 
     @Override
-    public Optional<ApplicationUser> selectUserbyUsername(String username) {
+    public Optional<UserDetails> selectUserbyUsername(String username) {
         return applicationUsers().stream()
                 .filter(user -> username.equals(user.getUsername()))
                 .findFirst();
     }
 
-    private List<ApplicationUser> applicationUsers() {
-        return List.of(
+    private List<UserDetails> applicationUsers() {
+        return Arrays.asList(
                 new ApplicationUser(
-                        "admin2",
-                        passwordEncoder.encode("admin2"),
+                        "admin",
+                        passwordEncoder.encode("admin"),
                         ADMIN.getGrantedAuthorities(),
                         true,
                         true,
@@ -37,8 +39,8 @@ public class FakeApplicationUserDaoService implements ApplicationUserDao {
                         true
                 ),
                 new ApplicationUser(
-                        "student2",
-                        "student2",
+                        "student",
+                        passwordEncoder.encode("student"),
                         STUDENT.getGrantedAuthorities(),
                         true,
                         true,
